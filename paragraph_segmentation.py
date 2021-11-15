@@ -7,10 +7,7 @@ nlp = spacy.load("en_core_web_sm")
 
 def sentence_spliter(text):
     doc = nlp(text)
-    sents = []
-    for sent in doc.sents:
-        sents.append(sent.text)
-    return sents
+    return [sent.text for sent in doc.sents]
 
 def baseline_segmentation(text, model, num_segmentation=0, std=1, min_segregation=5, max_segregation=20):
     sents = sentence_spliter(text)
