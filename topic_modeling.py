@@ -44,9 +44,10 @@ def predict_topic(model, sentence:str):
     sentence = vectorizer.transform([sentence.lower()]).toarray()
     return model.transform(sentence)
 
-def topic_diff(topic1, topic2, p=3.0):
+def topic_diff(topic1, topic2, p=3.0, num_topic=15):
     diff = topic1 - topic2
-    return np.power((diff ** p).sum(), 1/p)
+    diff = diff.reshape(-1,num_topic)
+    return np.power(np.abs(diff ** p).sum(axis=1), 1/p)
 
 # @TODO evaluate topic models by comparing their topic diversification 
 #       this require a word2vec model to get word similarity
