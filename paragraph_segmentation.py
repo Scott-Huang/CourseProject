@@ -34,4 +34,21 @@ def baseline_segmentation(text, model, num_segmentation=0, std=1, min_segregatio
     for i in segmented_sents:
         output.append(' '.join(i))
     
-    return output
+    # return arg for evaluation
+    return arg,output
+
+# for comparing partitioned segmentation
+def partition(sents, arg):
+    if sents is str:
+        sents = sentence_spliter(sents)
+    sents = np.zeros(len(sents))
+
+    category = 0
+    prev = 0
+    for i in arg:
+        sents[prev:i] = category
+        category += 1
+        prev = i
+    sents[prev:] = category
+
+    return sents
