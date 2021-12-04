@@ -14,10 +14,13 @@ def tokenize(sentence):
     mytokens = " ".join([i for i in mytokens])
     return mytokens
 
-def get_parsed_data():
+def get_parsed_data(parsed=True):
     data = get_corpus()
-
-    for title,text in data.items():
-        data[title] = tokenize(text)
+    if parsed:
+        for title,text in data.items():
+            data[title] = tokenize(text).replace('\\u00a0', '').replace('\xa0', '')
+    else:
+        for title,text in data.items():
+            data[title] = text.replace('\\u00a0', '').replace('\xa0', '')
 
     return data

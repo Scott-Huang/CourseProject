@@ -1,5 +1,5 @@
 import numpy as np
-from text_parser import get_parsed_data
+from text_parser import get_parsed_data, tokenize
 from sklearn.decomposition import LatentDirichletAllocation, NMF, TruncatedSVD
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -49,6 +49,42 @@ def topic_diff(topic1, topic2, p=3.0, num_topic=15):
     diff = diff.reshape(-1,num_topic)
     return np.power(np.abs(diff ** p).sum(axis=1), 1/p)
 
+def baseline_sent_diff(sents,model):
+    sents_topic = []
+    for sent in sents:
+        sent = tokenize(sent)
+        topic = predict_topic(model,sent)
+        sents_topic.append(topic)
+    sents_topic = np.array(sents_topic)
+
+    sents_diff = topic_diff(sents_topic[:-1],sents_topic[1:])
+    return sents_diff
+
 # @TODO evaluate topic models by comparing their topic diversification 
 #       this require a word2vec model to get word similarity
 #       and I might skip this part and directly test their performance on paragraph segregation
+
+import torch
+from transformers import AutoTokenizer, AutoModel
+
+tokenizer = AutoTokenizer.from_pretrained('allenai/scibert_scivocab_uncased')
+scibert = AutoModel.from_pretrained('allenai/scibert_scivocab_uncased')
+
+def text2vec(text):
+  with torch.no_grad():
+    encoded_input = tokenizer(text, return_tensors='pt')
+    return scibert(**encoded_input).pooler_output
+def cos_sim(vec1, vec2):
+    vec1 = vec1.flatten(start_dim=1)
+    vec2 = vec2.flatten(start_dim=1)
+    result = (vec1 * vec2).sum(dim=1) / (torch.norm(vec1,dim=1) * torch.norm(vec2,dim=1))
+    return result
+
+def bert_sent_diff(sents):
+    sents_vec = []
+    for sent in sents:
+        vec = text2vec(sent)
+        sents_vec.append(vec)
+    sents_vec = torch.cat(sents_vec)
+    sents_diff = cos_sim(sents_vec[:-1],sents_vec[1:])
+    return sents_diff
