@@ -50,13 +50,8 @@ def topic_diff(topic1, topic2, p=3.0, num_topic=15):
     return np.power(np.abs(diff ** p).sum(axis=1), 1/p)
 
 def baseline_sent_diff(sents,model):
-    sents_topic = []
-    for sent in sents:
-        sent = tokenize(sent)
-        topic = predict_topic(model,sent)
-        sents_topic.append(topic)
-    sents_topic = np.array(sents_topic)
-
+    sents_topic = np.array([predict_topic(model,tokenize(sent)) 
+                            for sent in sents])
     sents_diff = topic_diff(sents_topic[:-1],sents_topic[1:])
     return sents_diff
 
@@ -65,26 +60,23 @@ def baseline_sent_diff(sents,model):
 #       and I might skip this part and directly test their performance on paragraph segregation
 
 import torch
-from transformers import AutoTokenizer, AutoModel
+from torch.nn import functional as F
+from sentence_transformers import SentenceTransformer
 
-tokenizer = AutoTokenizer.from_pretrained('allenai/scibert_scivocab_uncased')
-scibert = AutoModel.from_pretrained('allenai/scibert_scivocab_uncased')
+#tokenizer = AutoTokenizer.from_pretrained('allenai/scibert_scivocab_uncased')
+#scibert = AutoModel.from_pretrained('allenai/scibert_scivocab_uncased')
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# list of models
+# 'all-MiniLM-L6-v2'
+# 'gsarti/scibert-nli'
+# 'whaleloops/phrase-bert' # measuring phrase similarity for evaluation
+sentence_transformer = SentenceTransformer('all-MiniLM-L6-v2', device=device)
 
-def text2vec(text):
-  with torch.no_grad():
-    encoded_input = tokenizer(text, return_tensors='pt')
-    return scibert(**encoded_input).pooler_output
-def cos_sim(vec1, vec2):
-    vec1 = vec1.flatten(start_dim=1)
-    vec2 = vec2.flatten(start_dim=1)
-    result = (vec1 * vec2).sum(dim=1) / (torch.norm(vec1,dim=1) * torch.norm(vec2,dim=1))
-    return result
+def text2vec(sentences):
+    with torch.no_grad():
+        return sentence_transformer.encode(sentences, convert_to_tensor=True)
 
 def bert_sent_diff(sents):
-    sents_vec = []
-    for sent in sents:
-        vec = text2vec(sent)
-        sents_vec.append(vec)
-    sents_vec = torch.cat(sents_vec)
-    sents_diff = cos_sim(sents_vec[:-1],sents_vec[1:])
-    return sents_diff
+    sents_vec = text2vec(sents)
+    sents_diff = F.cosine_similarity(sents_vec[:-1],sents_vec[1:])
+    return sents_diff.cpu()
