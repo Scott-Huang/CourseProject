@@ -2,6 +2,7 @@ import numpy as np
 from text_parser import get_parsed_data, tokenize
 from sklearn.decomposition import LatentDirichletAllocation, NMF, TruncatedSVD
 from sklearn.feature_extraction.text import CountVectorizer
+from functools import lru_cache
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -18,7 +19,9 @@ def get_vec_data():
     return data_vectorized
 
 TOPIC_MODELS = ['lda', 'nmf', 'lsi']
+@lru_cache(maxsize=4)
 def topic_model(model='lda', num_topic=15):
+    topic_model.current_model_name = None
     if model not in TOPIC_MODELS:
         raise Exception("Model not supported.")
     if model == 'lda':
@@ -50,6 +53,7 @@ def topic_diff(topic1, topic2, p=3.0, num_topic=15):
     return np.power(np.abs(diff ** p).sum(axis=1), 1/p)
 
 def baseline_sent_diff(sents,model):
+    model = topic_model(model)
     sents_topic = np.array([predict_topic(model,tokenize(sent)) 
                             for sent in sents])
     sents_diff = topic_diff(sents_topic[:-1],sents_topic[1:])
@@ -69,7 +73,6 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # list of models
 # 'all-MiniLM-L6-v2'
 # 'gsarti/scibert-nli'
-# 'whaleloops/phrase-bert' # measuring phrase similarity for evaluation
 sentence_transformer = SentenceTransformer('all-MiniLM-L6-v2', device=device)
 
 def text2vec(sentences):
