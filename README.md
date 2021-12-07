@@ -1,7 +1,6 @@
 # Documentation
 This project is an extended work of [Mooc](https://smartmoocs.web.illinois.edu/) which attempts to improve lecture segmentation and summarization of each segment based on subtitles of the lectures.
 
----
 ## Overview
 The task of this project is reduced to sub-tasks: paragraph segmentation and keywords extraction. The approach for paragraph segmentation task uses features of each sentence in the text, and compares their similarity. The keywords extraction task summarizes a paragraph into one vector embedding and finds closest phrases to the embedded paragraph.
 
@@ -60,4 +59,4 @@ The paragraph segmentation is considered as a partition problem here. The score 
 Mingwei Huang (mingwei6@illinois.edu)
 
 ---
-Here is a presentation video [link]().(Currently unlinked)
+Here is a presentation video [link](https://youtu.be/Xy1hzwj4zz4).
