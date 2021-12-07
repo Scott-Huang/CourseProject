@@ -1,5 +1,4 @@
 # Documentation
----
 This project is an extended work of [Mooc](https://smartmoocs.web.illinois.edu/) which attempts to improve lecture segmentation and summarization of each segment based on subtitles of the lectures.
 
 ---
@@ -41,6 +40,7 @@ The entire algorithm is unsupervised, so there is no need to present training an
 | SciBERT-Nli      |  0.666766 | 0.506096 |
 | SciBERT          |  0.770466 | 0.542953 |
 | all-MiniLM-L6-v2 |  0.794343 | 0.562764 |
+
 Precision is calculated by the maximum similarity between the predicted keyword and all true keywords.
 And recall is calculated by the maximum similarity between the true keyword and all predicted keywords.
 
@@ -52,6 +52,7 @@ And recall is calculated by the maximum similarity between the true keyword and 
 | LSI              |       4.0234       |
 | all-MiniLM-L6-v2 |       3.8637       |
 | SciBERT          |       4.1515       |
+
 The paragraph segmentation is considered as a partition problem here. The score is the average of completeness score and adjusted MI score between predicted labels and true labels.
 
 ---
