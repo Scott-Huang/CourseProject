@@ -18,6 +18,7 @@ Here is all packages used in this project:
     - Installed model `en_core_web_sm`
 - `pysrt=1.1.2`
 - `webvtt-py=0.4.6`
+
 (I didn't use a `requirement.txt` mainly because there is an additional model to install...)
 
 ---
