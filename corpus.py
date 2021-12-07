@@ -1,3 +1,7 @@
+"""
+This program handles data collection.
+"""
+
 import glob
 import pysrt
 import webvtt
@@ -7,6 +11,15 @@ def get_file_name(file):
     return file[file.rfind('\\')+1:]
 
 def get_corpus(corrected=True, stored=False):
+    """Process all subtitle files in the data folder.
+    
+    Parameters:
+        corrected: If true, it will process all files in 
+            data/corrected_transcripts which are in .vtt format, 
+            otherwise, it will process the data/transcripts folder
+            containing .srt files.
+        stored: If true, storing the processed data into data/corpus.json.
+    """
     data = {}
     if corrected:
         for file in glob.glob('data/corrected_transcripts/*/*.vtt'):

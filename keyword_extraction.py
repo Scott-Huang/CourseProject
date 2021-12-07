@@ -1,3 +1,9 @@
+"""
+This program handles all keyword extraction tasks.
+And it also contains all models used for keyword extraction
+(some are shared with topic_modeling.py).
+"""
+
 from keybert import KeyBERT
 from topic_modeling import sentence_transformer
 #from transformers import AutoModel

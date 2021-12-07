@@ -1,3 +1,8 @@
+"""
+This program handles functions that measure differences of sentences.
+There are many topic and bert models here too, mainly used for calculating sentence differences.
+"""
+
 import numpy as np
 from text_parser import get_parsed_data, tokenize
 from sklearn.decomposition import LatentDirichletAllocation, NMF, TruncatedSVD
@@ -67,8 +72,6 @@ import torch
 from torch.nn import functional as F
 from sentence_transformers import SentenceTransformer
 
-#tokenizer = AutoTokenizer.from_pretrained('allenai/scibert_scivocab_uncased')
-#scibert = AutoModel.from_pretrained('allenai/scibert_scivocab_uncased')
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # list of models
 # 'all-MiniLM-L6-v2'

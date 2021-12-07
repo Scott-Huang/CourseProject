@@ -1,3 +1,8 @@
+"""
+This program handles all evaluations of models for every task
+(i.e. segmentation & keywords extraction).
+"""
+
 import torch
 import json
 import numpy as np
@@ -19,6 +24,14 @@ def get_annotated_answer():
     return annotated_answer
 
 def evaluate_segmentation(model, log=False):
+    """Evaluete the performace of segmentation.
+    The bert model needs to be generated in topic_modeling.py.
+
+    Returns:
+        total_score: The output score is the average of the completeness score and
+            the adjusted MI score between the predicted label (output of the model)
+            and the true label (annotated data).
+    """
     total_score = 0
     for annotation in get_annotated_answer():
         text = annotation['text']
@@ -76,6 +89,13 @@ def recall(annotation):
     return avg_score
 
 def evaluate_keyword_extraction(log=False):
+    """Evaluate the performance of the keyword extraction using phrase embedding.
+    The model needs to be generated in keyword_extraction.py.
+
+    Returns:
+        p: The average precision. 
+        r: The average recall.
+    """
     p,r = 0,0
     annotations = get_annotated_answer()
     for annotation in annotations:
@@ -88,3 +108,9 @@ def evaluate_keyword_extraction(log=False):
         print('Precision: %.3f' % p)
         print('Recall: %.3f' % r)
     return p,r
+
+# Example use of evaluation.
+# if __name__ == '__main__':
+#     models = ['bert', 'lda', 'nmf', 'lsi']
+#     evaluate_segmentation(models[0], log=True)
+#     evaluate_keyword_extraction(log=True)

@@ -1,3 +1,7 @@
+"""
+This program handles text preprocessing.
+"""
+
 import string
 from spacy.lang.en.stop_words import STOP_WORDS
 from spacy.lang.en import English
