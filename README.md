@@ -47,11 +47,11 @@ And recall is calculated by the maximum similarity between the true keyword and 
 ###### Paragraph Segmentation
 | Model            | Segmentation Score |
 |------------------|:------------------:|
-| LDA              |       3.6675       |
-| NMF              |       3.9311       |
-| LSI              |       4.0234       |
-| all-MiniLM-L6-v2 |       3.8637       |
-| SciBERT          |       4.1515       |
+| LDA              |       2.6616       |
+| NMF              |       3.2390       |
+| LSI              |       2.9948       |
+| all-MiniLM-L6-v2 |       3.1895       |
+| SciBERT-Nli      |       3.0742       |
 
 The paragraph segmentation is considered as a partition problem here. The score is the average of completeness score and adjusted MI score between predicted labels and true labels.
 

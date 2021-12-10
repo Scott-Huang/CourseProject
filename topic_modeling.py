@@ -76,7 +76,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # list of models
 # 'all-MiniLM-L6-v2'
 # 'gsarti/scibert-nli'
-sentence_transformer = SentenceTransformer('all-MiniLM-L6-v2', device=device)
+sentence_transformer = SentenceTransformer('gsarti/scibert-nli', device=device)
 
 def text2vec(sentences):
     with torch.no_grad():

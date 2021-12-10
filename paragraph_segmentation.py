@@ -66,9 +66,9 @@ def end_to_end_segmentation():
     pass
 
 
-def partition(sents, arg):
+def partition(sents:list or str, arg):
     """For comparing partitioned segmentation."""
-    if sents is str:
+    if isinstance(sents, str):
         sents = sentence_spliter(sents)
     sents = np.zeros(len(sents))
 
